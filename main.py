@@ -144,13 +144,13 @@ class SortingVisual:
             self.j -= 1
 
     def __quick_sort_next(self, fast_mode: bool):
-        if not self.left < self.right:
-            if self.left + 1 < self.end:
-                self.left_stack.append(self.left + 1)
+        if not self.left <= self.right:
+            if self.left < self.end:
+                self.left_stack.append(self.left)
                 self.right_stack.append(self.end)
-            if self.begin < self.right - 1:
+            if self.begin < self.right:
                 self.left_stack.append(self.begin)
-                self.right_stack.append(self.right - 1)
+                self.right_stack.append(self.right)
 
             if len(self.left_stack) == 0:
                 self.sort_type = None
@@ -172,7 +172,7 @@ class SortingVisual:
         else:
             if self.list[self.left] < self.pivot:
                 self.left += 1
-            elif self.list[self.right] >= self.pivot:
+            elif self.list[self.right] > self.pivot:
                 self.right -= 1
             else:
                 self.list[self.left], self.list[self.right] = self.list[self.right], self.list[self.left]
