@@ -12,6 +12,8 @@ WHITE = (255, 255, 255)
 BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
+DARK_GRAY = (50, 50, 50)
+LIGHT_GRAY = (200, 200, 200)
 
 
 # Type of sorting algorithm
@@ -259,10 +261,16 @@ def main():
 
         # Display if no_delay mode by using inverted color
         if no_delay:
-            screen.fill(BLACK)
+            if pause:
+                screen.fill(DARK_GRAY)
+            else:
+                screen.fill(BLACK)
             s.draw(screen, interval, WHITE)
         else:
-            screen.fill(WHITE)
+            if pause:
+                screen.fill(LIGHT_GRAY)
+            else:
+                screen.fill(WHITE)
             s.draw(screen, interval, BLACK)
 
         # Show list if shuffle or complete sorting
