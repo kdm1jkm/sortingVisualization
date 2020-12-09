@@ -169,6 +169,8 @@ class SortingVisual:
                 self.left += 1
             while self.list[self.right] > self.pivot:
                 self.right -= 1
+            if self.left > self.right:
+                return
             self.list[self.left], self.list[self.right] = self.list[self.right], self.list[self.left]
             self.left += 1
             self.right -= 1
