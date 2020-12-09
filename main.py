@@ -4,17 +4,17 @@ import random
 from typing import *
 import sys
 
-GRAPH_INTERVAL = 1
+SIZE = (1280, 720)
 
+# Color
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
-SIZE = (1280, 720)
 
-
+# Type of sorting algorithm
 class SortType(Enum):
     BUBBLE_SORT = 1
     INSERTION_SORT = 2
@@ -22,12 +22,13 @@ class SortType(Enum):
 
 
 class SortingVisual:
+    # initialize
     def __init__(self, init_list=None):
         self.sort_type: Optional[SortType] = None
         if init_list is None:
             init_list = []
         self.list: List = init_list
-        self.i = self.j = self.left = self.right = self.begin = self.end  = 0
+        self.i = self.j = self.left = self.right = self.begin = self.end = 0
         self.pivot = self.list[0]
 
     def shuffle(self):
@@ -68,12 +69,13 @@ class SortingVisual:
         result = (num - self.min) / (self.max - self.min)
         return result
 
+    # Choose type of sorting algorithm and initialize for algorithm
     def init_sort(self, sort_type: SortType):
         self.sort_type = sort_type
         {
-            SortType.BUBBLE_SORT: self.__init_bubble_sort
-            , SortType.INSERTION_SORT: self.__init_insertion_sort
-            , SortType.QUICK_SORT: self.__init_quick_sort
+            SortType.BUBBLE_SORT: self.__init_bubble_sort,
+            SortType.INSERTION_SORT: self.__init_insertion_sort,
+            SortType.QUICK_SORT: self.__init_quick_sort
         }[sort_type]()
 
     def __init_bubble_sort(self):
@@ -94,12 +96,13 @@ class SortingVisual:
         self.right_stack = [len(self.list) - 1]
         self.pivot = self.list[int(len(self.list) / 2)]
 
+    # Process sorting one step
     def sort_next(self, fast_mode=False):
         r = {
-            SortType.BUBBLE_SORT: self.__bubble_sort_next
-            , SortType.INSERTION_SORT: self.__insertion_sort_next
-            , SortType.QUICK_SORT: self.__quick_sort_next
-            , None: False
+            SortType.BUBBLE_SORT: self.__bubble_sort_next,
+            SortType.INSERTION_SORT: self.__insertion_sort_next,
+            SortType.QUICK_SORT: self.__quick_sort_next,
+            None: False
         }[self.sort_type]
         if not r:
             return False
@@ -181,58 +184,48 @@ class SortingVisual:
 
 
 def main():
-    # print(SIZE)
+    # Get data from user
     global SIZE
     SIZE = (int(input("Enter width>>")), int(input("Enter height>>")))
     length: int = int(input("Enter length>>"))
 
-    manual_input = {
+    if {
         "y": True,
         "n": False
-    }.get(input("Manual input(y/n)>>"), False)
-
-    if manual_input:
+    }.get(input("Manual input(y/n)>>"), False):
         ls = []
         for i in range(length):
             ls.append(int(input("Enter #%d>>" % (i + 1))))
     else:
         ls = list(range(length))
 
-    # print("1. Bubble sort")
-    # print("2. Insertion sort")
-    # print("3. Quick sort")
-    # sorting_type = {
-    #     "1": SortType.BUBBLE_SORT,
-    #     "2": SortType.INSERTION_SORT,
-    #     "3": SortType.QUICK_SORT
-    # }.get(input("Enter sort type>>"), SortType.QUICK_SORT)
-
     fps: int = int(input("Enter fps>>"))
-    # no_delay = fps == -1
-
-    pygame.init()
-    screen = pygame.display.set_mode(SIZE)
-    clock = pygame.time.Clock()
 
     s = SortingVisual(ls)
-    # s.shuffle()
-    # s.init_sort(sorting_type)
 
     if length > 200:
         interval = 0
     else:
         interval = 1
 
+    # Initialize setting
     complete = False
     pause = False
     go_frame = False
     processed = False
     no_delay = False
 
+    # Initialize pygame
+    pygame.init()
+    screen = pygame.display.set_mode(SIZE)
+    clock = pygame.time.Clock()
+
     while True:
+        # check if no_delay mode
         if not no_delay:
             clock.tick(fps)
 
+        # Handle event
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
@@ -257,9 +250,12 @@ def main():
                 elif event.key == pygame.K_f:
                     no_delay = not no_delay
 
+        # Check pause and run one frame
         if go_frame or not pause:
             go_frame = False
             processed = s.sort_next(no_delay)
+
+        # Display if no_delay mode by using inverted color
         if no_delay:
             screen.fill(BLACK)
             s.draw(screen, interval, WHITE)
@@ -267,11 +263,12 @@ def main():
             screen.fill(WHITE)
             s.draw(screen, interval, BLACK)
 
+        # Show list if shuffle or complete sorting
         if not complete and not processed:
             print(s.list)
-
         complete = not processed
 
+        # Update screen
         pygame.display.flip()
 
 
